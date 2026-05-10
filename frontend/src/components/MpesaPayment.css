@@ -1,0 +1,134 @@
+.mpesa {
+  border: 1px solid var(--border);
+  padding: 28px;
+  background: var(--white);
+}
+
+.mpesa__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.mpesa__logo {
+  width: 44px; height: 44px;
+  background: #00a651;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mpesa__header h3 { font-size: 16px; font-weight: 500; margin-bottom: 2px; }
+.mpesa__header p  { font-size: 14px; color: var(--muted); }
+
+.mpesa__form { display: flex; flex-direction: column; gap: 16px; }
+.mpesa__field { display: flex; flex-direction: column; gap: 8px; }
+.mpesa__field label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.mpesa__field input {
+  border: 1px solid var(--border);
+  padding: 12px 14px;
+  font-size: 15px;
+  color: var(--black);
+  background: var(--white);
+  transition: border-color 0.2s;
+}
+.mpesa__field input:focus { border-color: #00a651; outline: none; }
+.mpesa__hint { font-size: 12px; color: var(--muted); }
+.mpesa__btn { width: 100%; padding: 14px; font-size: 13px; letter-spacing: 1.5px; }
+
+/* Waiting */
+.mpesa__waiting {
+  text-align: center;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.mpesa__pulse {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: rgba(0,166,81,0.15);
+  position: relative;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+.mpesa__pulse::after {
+  content: '';
+  position: absolute;
+  inset: 10px;
+  border-radius: 50%;
+  background: #00a651;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.1); opacity: 0.8; }
+}
+.mpesa__waiting h3 { font-size: 18px; font-weight: 500; }
+.mpesa__waiting p  { font-size: 14px; color: var(--muted); max-width: 280px; }
+.mpesa__sub { font-size: 13px !important; }
+.mpesa__polling {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.mpesa__retry {
+  margin-top: 8px;
+  padding: 10px 24px;
+  font-size: 12px;
+}
+
+/* Done */
+.mpesa__done {
+  text-align: center;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.mpesa__done-icon {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: #00a651;
+  color: #fff;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mpesa__done h3 { font-size: 18px; font-weight: 500; color: #00a651; }
+.mpesa__done p  { font-size: 14px; color: var(--muted); }
+
+/* Error */
+.mpesa__error {
+  text-align: center;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.mpesa__error-icon {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: #ef4444;
+  color: #fff;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mpesa__error h3 { font-size: 18px; font-weight: 500; color: #ef4444; }
+.mpesa__error p  { font-size: 14px; color: var(--muted); max-width: 300px; }
