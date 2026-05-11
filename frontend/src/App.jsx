@@ -13,7 +13,7 @@ import ProductDetail from "./pages/ProductDetail";
 import CartPage      from "./pages/CartPage";
 import CheckoutPage  from "./pages/CheckoutPage";
 import OrderPage     from "./pages/OrderPage";
-import ProfilePage   from "./pages/ProfilePage";
+import ProfilePage   from "./pages/Profilepage";
 import MyOrdersPage  from "./pages/MyOrdersPage";
 import NotFound      from "./pages/NotFound";
 
