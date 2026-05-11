@@ -6,8 +6,8 @@ import { store } from "./redux/store";
 import App from "./App";
 import Toast from "./components/Toast";
 import ScrollToTop from "./components/ScrollToTop";
-import BackToTop from "./components/BackToTop";
-import ErrorBoundary from "./components/ErrorBoundary";
+import BackToTop from "./components/Backtotop";
+import ErrorBoundary from "./components/Errorboundary";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
