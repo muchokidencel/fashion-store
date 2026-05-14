@@ -14,7 +14,7 @@ import CartPage      from "./pages/CartPage";
 import CheckoutPage  from "./pages/CheckoutPage";
 import OrderPage     from "./pages/OrderPage";
 import ProfilePage   from "./pages/Profilepage";
-import MyOrdersPage  from "./pages/MyOrdersPage";
+import MyOrdersPage  from "./pages/Myorderspage";
 import NotFound      from "./pages/NotFound";
 
 // Admin pages
