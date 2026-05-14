@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../redux/slices/authSlice";
 import API from "../utils/api";
 import { showToast } from "../components/Toast";
-import "./ProfilePage.css";
+import "./Profilepage.css";
 
 export default function ProfilePage() {
   const { userInfo }  = useSelector((s) => s.auth);
