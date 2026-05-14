@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import API from "../utils/api";
-import "./MyOrderspage.css";
+import "./Myorderspage.css";
 
 const STATUS_COLOR = {
   pending:    "#f59e0b",
