@@ -286,7 +286,20 @@
 @media (max-width: 768px) {
   .pd__layout { grid-template-columns: 1fr; gap: 32px; }
   .pd__images { flex-direction: column-reverse; }
-  .pd__thumbs { flex-direction: row; width: 100%; }
-  .pd__thumb { width: 60px; height: 75px; }
+  .pd__thumbs { flex-direction: row; width: 100%; overflow-x: auto; justify-content: flex-start; }
+  .pd__thumb { width: 60px; height: 75px; flex: 0 0 auto; }
+  .pd__main-img { aspect-ratio: 4 / 5; }
+  .pd__price { flex-wrap: wrap; gap: 12px; }
+  .pd__desc { margin-bottom: 20px; }
+  .pd__qty { width: fit-content; }
+  .pd__review-form { max-width: 100%; }
   .pd__name { font-size: 32px; }
+}
+
+@media (max-width: 600px) {
+  .pd { padding: 24px 0 60px; }
+  .pd__name { font-size: 28px; }
+  .pd__price--current { font-size: 28px; }
+  .pd__thumb { width: 52px; height: 66px; }
+  .pd__main-img { min-height: 300px; }
 }

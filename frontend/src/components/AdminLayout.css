@@ -91,3 +91,15 @@
 /* Main */
 .admin-main { overflow-x: hidden; }
 .admin-content { padding: 32px 36px; }
+
+@media (max-width: 900px) {
+  .admin-layout { grid-template-columns: 1fr; }
+  .admin-sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    min-height: auto;
+  }
+  .admin-sidebar__top { padding: 18px 16px; }
+  .admin-content { padding: 24px 20px; }
+}

@@ -142,3 +142,13 @@
   .products-page__layout { grid-template-columns: 1fr; }
   .filters { position: static; }
 }
+
+@media (max-width: 600px) {
+  .products-page { padding: 32px 0 60px; }
+  .products-page__header h1 { font-size: 32px; }
+  .products-page__layout { gap: 24px; }
+  .filters { padding: 20px; }
+  .filter-price { flex-direction: column; }
+  .filter-price .filter-input { width: 100%; }
+  .filter-clear, .filter-btn { font-size: 12px; }
+}

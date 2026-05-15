@@ -176,6 +176,8 @@
     gap: 20px;
     border-bottom: 1px solid var(--border);
     box-shadow: var(--shadow-md);
+    max-height: calc(100vh - 68px);
+    overflow-y: auto;
   }
   .navbar__links.open { display: flex; }
   .navbar__links a { font-size: 14px; }

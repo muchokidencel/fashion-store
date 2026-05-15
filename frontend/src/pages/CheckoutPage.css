@@ -263,4 +263,8 @@
   .checkout__summary { position: static; order: -1; }
   .checkout__fields { grid-template-columns: 1fr; }
   .checkout__field--full { grid-column: 1; }
+  .checkout__step { flex-wrap: wrap; gap: 10px; }
+  .checkout__step-line { display: none; }
+  .checkout__nav { flex-direction: column; gap: 12px; }
+  .checkout__next { width: 100%; }
 }

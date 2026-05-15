@@ -232,3 +232,13 @@
   .cart-item__remove { position: absolute; top: 0; right: 0; }
   .cart-item { position: relative; }
 }
+
+@media (max-width: 480px) {
+  .cart-item { grid-template-columns: 1fr; gap: 12px; }
+  .cart-item__img { width: 100%; height: auto; min-height: 160px; }
+  .cart-item__qty { width: 100%; margin-top: 12px; }
+  .cart-item__remove { position: static; margin-top: 12px; }
+  .cart-item__subtotal { display: block; text-align: right; }
+  .cart-item__meta { flex-wrap: wrap; gap: 8px; }
+  .cart__summary { padding: 24px; }
+}
