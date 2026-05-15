@@ -50,6 +50,12 @@
 .auth-field input:focus { border-bottom-color: var(--gold); }
 .auth-field input::placeholder { color: var(--border); }
 
+@media (max-width: 480px) {
+  .auth-card { padding: 32px 20px; }
+  .auth-header h1 { font-size: 32px; }
+  .auth-btn { padding: 12px; }
+}
+
 .auth-btn {
   margin-top: 12px;
   width: 100%;
