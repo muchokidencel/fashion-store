@@ -13,10 +13,11 @@ const NAV = [
 ];
 
 export default function AdminLayout({ children }) {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [collapsed, setCollapsed] = useState(false);
+  const location  = useLocation();
+  const navigate  = useNavigate();
+  const dispatch  = useDispatch();
+  const [collapsed,   setCollapsed]   = useState(false);
+  const [mobileOpen,  setMobileOpen]  = useState(false);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -24,14 +25,37 @@ export default function AdminLayout({ children }) {
     navigate("/");
   };
 
+  const handleNavClick = () => setMobileOpen(false);
+
   return (
     <div className={`admin-layout ${collapsed ? "collapsed" : ""}`}>
-      <aside className="admin-sidebar">
+
+      {/* Mobile top bar */}
+      <div className="admin-mobile-bar">
+        <span className="admin-mobile-bar__logo">LUXEWEAR</span>
+        <button
+          className="admin-mobile-bar__btn"
+          onClick={() => setMobileOpen(true)}
+        >
+          ☰
+        </button>
+      </div>
+
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div className="admin-overlay" onClick={() => setMobileOpen(false)} />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`admin-sidebar ${mobileOpen ? "mobile-open" : ""}`}>
         <div className="admin-sidebar__top">
-          <Link to="/admin" className="admin-sidebar__logo">
+          <Link to="/admin" className="admin-sidebar__logo" onClick={handleNavClick}>
             {collapsed ? "LW" : "LUXEWEAR"}
           </Link>
-          <button className="admin-sidebar__toggle" onClick={() => setCollapsed(!collapsed)}>
+          <button
+            className="admin-sidebar__toggle"
+            onClick={() => setCollapsed(!collapsed)}
+          >
             {collapsed ? "→" : "←"}
           </button>
         </div>
@@ -44,6 +68,7 @@ export default function AdminLayout({ children }) {
               key={item.path}
               to={item.path}
               className={`admin-nav-item ${location.pathname === item.path ? "active" : ""}`}
+              onClick={handleNavClick}
             >
               <span className="admin-nav-item__icon">{item.icon}</span>
               {!collapsed && <span className="admin-nav-item__label">{item.label}</span>}
@@ -52,7 +77,7 @@ export default function AdminLayout({ children }) {
         </nav>
 
         <div className="admin-sidebar__bottom">
-          <Link to="/" className="admin-nav-item">
+          <Link to="/" className="admin-nav-item" onClick={handleNavClick}>
             <span className="admin-nav-item__icon">🏪</span>
             {!collapsed && <span className="admin-nav-item__label">View Store</span>}
           </Link>
@@ -63,6 +88,7 @@ export default function AdminLayout({ children }) {
         </div>
       </aside>
 
+      {/* Main content */}
       <main className="admin-main">
         <div className="admin-content">{children}</div>
       </main>

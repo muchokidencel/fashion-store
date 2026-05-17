@@ -1,80 +1,30 @@
-.my-orders { padding: 48px 0 80px; }
-.my-orders h1 {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 42px;
-  font-weight: 300;
-  margin-bottom: 40px;
-}
-.my-orders__empty {
-  text-align: center;
-  padding: 80px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  color: var(--muted);
-  font-size: 15px;
-}
-.my-orders__list { display: flex; flex-direction: column; gap: 20px; }
+.my-orders { padding: 32px 0 60px; }
+.my-orders h1 { font-family: var(--font-display); font-size: 36px; font-weight: 300; margin-bottom: 32px; }
+.my-orders__empty { text-align: center; padding: 60px 20px; display: flex; flex-direction: column; align-items: center; gap: 16px; color: var(--muted); font-size: 14px; }
+.my-orders__list { display: flex; flex-direction: column; gap: 16px; }
 
-.order-card {
-  border: 1px solid var(--border);
-  background: var(--white);
-  overflow: hidden;
-}
-.order-card__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--border);
-  background: var(--cream);
-}
-.order-card__id   { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
-.order-card__date { font-size: 12px; color: var(--muted); }
-.order-card__badges { display: flex; gap: 8px; align-items: center; }
-.order-card__status {
-  font-size: 10px; font-weight: 600;
-  letter-spacing: 1.5px; text-transform: uppercase;
-  padding: 4px 10px; border: 1px solid; border-radius: 2px;
-}
-.order-card__paid {
-  font-size: 10px; font-weight: 600;
-  letter-spacing: 1px; text-transform: uppercase;
-  padding: 4px 10px; border-radius: 2px;
-}
-.order-card__paid.paid   { color: #10b981; background: rgba(16,185,129,0.08); }
+.order-card { border: 1px solid var(--border); background: var(--white); overflow: hidden; }
+.order-card__header { display: flex; justify-content: space-between; align-items: flex-start; padding: 16px 20px; border-bottom: 1px solid var(--border); background: var(--cream); flex-wrap: wrap; gap: 10px; }
+.order-card__id { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+.order-card__date { font-size: 11px; color: var(--muted); }
+.order-card__badges { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.order-card__status { font-size: 9px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 8px; border: 1px solid; border-radius: 2px; }
+.order-card__paid { font-size: 9px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; padding: 3px 8px; border-radius: 2px; }
+.order-card__paid.paid { color: #10b981; background: rgba(16,185,129,0.08); }
 .order-card__paid.unpaid { color: #f59e0b; background: rgba(245,158,11,0.08); }
-
-.order-card__items {
-  padding: 16px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.order-card__item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 13px;
-  color: var(--black);
-}
-.order-card__img {
-  width: 40px; height: 50px;
-  background: var(--cream);
-  overflow: hidden;
-  flex-shrink: 0;
-}
+.order-card__items { padding: 14px 20px; display: flex; flex-direction: column; gap: 8px; }
+.order-card__item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--black); }
+.order-card__img { width: 36px; height: 45px; background: var(--cream); overflow: hidden; flex-shrink: 0; }
 .order-card__img img { width: 100%; height: 100%; object-fit: cover; }
 .order-card__img--empty { width: 100%; height: 100%; background: var(--cream); }
-.order-card__more { font-size: 12px; color: var(--muted); }
+.order-card__more { font-size: 11px; color: var(--muted); }
+.order-card__footer { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-top: 1px solid var(--border); }
+.order-card__total { font-size: 15px; font-weight: 500; }
+.order-card__btn { padding: 8px 20px; font-size: 11px; letter-spacing: 1px; }
 
-.order-card__footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-  border-top: 1px solid var(--border);
+@media (max-width: 480px) {
+  .my-orders h1 { font-size: 28px; }
+  .order-card__header { flex-direction: column; }
+  .order-card__footer { flex-direction: column; gap: 12px; align-items: flex-start; }
+  .order-card__btn { width: 100%; text-align: center; }
 }
-.order-card__total { font-size: 16px; font-weight: 500; }
-.order-card__btn   { padding: 8px 24px; font-size: 12px; }

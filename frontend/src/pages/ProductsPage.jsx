@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import API from "../utils/api";
 import { ProductCard } from "./Home";
 import "./ProductsPage.css";
@@ -12,6 +12,7 @@ export default function ProductsPage() {
   const [loading,   setLoading]   = useState(true);
   const [pages,     setPages]     = useState(1);
   const [total,     setTotal]     = useState(0);
+  const [filterOpen, setFilterOpen] = useState(false);
 
   const category = searchParams.get("category") || "All";
   const keyword  = searchParams.get("keyword")  || "";
@@ -43,6 +44,7 @@ export default function ProductsPage() {
     else next.delete(key);
     next.delete("page");
     setSearchParams(next);
+    setFilterOpen(false);
   };
 
   const setPage = (p) => {
@@ -54,20 +56,25 @@ export default function ProductsPage() {
 
   return (
     <div className="products-page container">
-
-      {/* Page header */}
       <div className="products-page__header">
         <h1>{category === "All" ? "All Products" : category}</h1>
         <p>{total} {total === 1 ? "item" : "items"} found</p>
       </div>
 
       <div className="products-page__layout">
+        {/* Mobile filter toggle */}
+        <button
+          className="filter-toggle"
+          onClick={() => setFilterOpen(!filterOpen)}
+        >
+          <span>Filter & Search</span>
+          <span>{filterOpen ? "✕" : "≡"}</span>
+        </button>
 
         {/* Sidebar filters */}
-        <aside className="filters">
+        <aside className={`filters ${filterOpen ? "open" : ""}`}>
           <h3>Filters</h3>
 
-          {/* Search */}
           <div className="filter-group">
             <label>Search</label>
             <input
@@ -81,7 +88,6 @@ export default function ProductsPage() {
             />
           </div>
 
-          {/* Category */}
           <div className="filter-group">
             <label>Category</label>
             {CATEGORIES.map((cat) => (
@@ -95,33 +101,16 @@ export default function ProductsPage() {
             ))}
           </div>
 
-          {/* Price range */}
           <div className="filter-group">
             <label>Price Range (Ksh)</label>
             <div className="filter-price">
-              <input
-                type="number"
-                placeholder="Min"
-                defaultValue={minPrice}
-                className="filter-input"
-                onBlur={(e) => setParam("minPrice", e.target.value)}
-              />
+              <input type="number" placeholder="Min" defaultValue={minPrice} className="filter-input" onBlur={(e) => setParam("minPrice", e.target.value)} />
               <span>—</span>
-              <input
-                type="number"
-                placeholder="Max"
-                defaultValue={maxPrice}
-                className="filter-input"
-                onBlur={(e) => setParam("maxPrice", e.target.value)}
-              />
+              <input type="number" placeholder="Max" defaultValue={maxPrice} className="filter-input" onBlur={(e) => setParam("maxPrice", e.target.value)} />
             </div>
           </div>
 
-          {/* Clear filters */}
-          <button
-            className="filter-clear"
-            onClick={() => setSearchParams({})}
-          >
+          <button className="filter-clear" onClick={() => setSearchParams({})}>
             Clear All Filters
           </button>
         </aside>
@@ -133,27 +122,17 @@ export default function ProductsPage() {
           ) : products.length === 0 ? (
             <div className="products-page__empty">
               <p>No products found.</p>
-              <button className="btn-outline" onClick={() => setSearchParams({})}>
-                Clear Filters
-              </button>
+              <button className="btn-outline" onClick={() => setSearchParams({})}>Clear Filters</button>
             </div>
           ) : (
             <>
               <div className="products-grid">
                 {products.map((p) => <ProductCard key={p._id} product={p} />)}
               </div>
-
-              {/* Pagination */}
               {pages > 1 && (
                 <div className="pagination">
                   {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
-                    <button
-                      key={p}
-                      className={`pagination__btn ${p === page ? "active" : ""}`}
-                      onClick={() => setPage(p)}
-                    >
-                      {p}
-                    </button>
+                    <button key={p} className={`pagination__btn ${p === page ? "active" : ""}`} onClick={() => setPage(p)}>{p}</button>
                   ))}
                 </div>
               )}
