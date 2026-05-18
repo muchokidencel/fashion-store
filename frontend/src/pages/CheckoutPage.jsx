@@ -1,273 +1,117 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import API from "../utils/api";
-import { clearCart } from "../redux/slices/cartSlice";
-import "./CheckoutPage.css";
+import MpesaPayment from "../components/MpesaPayment";
+import PaystackPayment from "../components/PaystackPayment";
+import "./OrderPage.css";
 
-const STEPS = ["Shipping", "Payment", "Review"];
+export default function OrderPage() {
+  const { id }              = useParams();
+  const [order,   setOrder] = useState(null);
+  const [loading, setLoad]  = useState(true);
+  const [error,   setError] = useState("");
 
-export default function CheckoutPage() {
-  const { items, totalPrice } = useSelector((s) => s.cart);
-  const { userInfo }          = useSelector((s) => s.auth);
-  const dispatch              = useDispatch();
-  const navigate              = useNavigate();
-
-  const [step, setStep]       = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [error,   setError]   = useState("");
-
-  const shipping  = totalPrice > 5000 ? 0 : 350;
-  const tax       = Math.round(totalPrice * 0.16);
-  const grandTotal= totalPrice + shipping + tax;
-
-  // Shipping form state
-  const [ship, setShip] = useState({
-    fullName: userInfo?.name || "",
-    street: "", city: "", county: "", phone: "",
-  });
-
-  // Payment method
-  const [payMethod, setPayMethod] = useState("mpesa");
-  const [mpesaPhone, setMpesaPhone] = useState("");
-
-  const updateShip = (e) => setShip({ ...ship, [e.target.name]: e.target.value });
-
-  const handlePlaceOrder = async () => {
-    setError(""); setLoading(true);
-    try {
-      const orderItems = items.map((i) => ({
-        product:  i._id,
-        name:     i.name,
-        image:    i.image,
-        price:    i.price,
-        size:     i.size,
-        color:    i.color,
-        quantity: i.quantity,
-      }));
-
-      const { data } = await API.post("/orders", {
-        orderItems,
-        shippingAddress: ship,
-        paymentMethod:   payMethod,
-        itemsPrice:      totalPrice,
-        shippingPrice:   shipping,
-        taxPrice:        tax,
-        totalPrice:      grandTotal,
-      });
-
-      dispatch(clearCart());
-      navigate(`/orders/${data._id}`);
-    } catch (err) {
-      setError(err.response?.data?.message || "Could not place order.");
-    } finally {
-      setLoading(false);
-    }
+  const fetchOrder = () => {
+    API.get(`/orders/${id}`)
+      .then(({ data }) => setOrder(data))
+      .catch(() => setError("Order not found."))
+      .finally(() => setLoad(false));
   };
 
-  if (items.length === 0) {
-    navigate("/cart"); return null;
-  }
+  useEffect(() => { fetchOrder(); }, [id]);
+
+  if (loading) return <div className="page-loader"><div className="spinner" /></div>;
+  if (error)   return <div className="order-error container"><p>{error}</p></div>;
+  if (!order)  return null;
+
+  const statusColors = {
+    pending:    "#f59e0b",
+    processing: "#3b82f6",
+    shipped:    "#8b5cf6",
+    delivered:  "#10b981",
+    cancelled:  "#ef4444",
+  };
 
   return (
-    <div className="checkout container">
-      <h1 className="checkout__title">Checkout</h1>
-
-      {/* Step indicator */}
-      <div className="checkout__steps">
-        {STEPS.map((s, i) => (
-          <div key={s} className={`checkout__step ${i <= step ? "active" : ""} ${i < step ? "done" : ""}`}>
-            <div className="checkout__step-num">{i < step ? "✓" : i + 1}</div>
-            <span>{s}</span>
-            {i < STEPS.length - 1 && <div className="checkout__step-line" />}
-          </div>
-        ))}
+    <div className="order-page container">
+      <div className="order-page__header">
+        <div className="order-page__icon">✓</div>
+        <h1>Order Confirmed!</h1>
+        <p>Thank you for your order. We will send you an update when it ships.</p>
+        <p className="order-page__id">Order ID: <strong>{order._id}</strong></p>
       </div>
 
-      <div className="checkout__layout">
-        {/* Left — steps */}
-        <div className="checkout__form">
-
-          {/* Step 0 — Shipping */}
-          {step === 0 && (
-            <div className="checkout__section">
-              <h2>Shipping Address</h2>
-              <div className="checkout__fields">
-                <div className="checkout__field checkout__field--full">
-                  <label>Full Name</label>
-                  <input name="fullName" value={ship.fullName} onChange={updateShip} placeholder="Your full name" required />
-                </div>
-                <div className="checkout__field checkout__field--full">
-                  <label>Street Address</label>
-                  <input name="street" value={ship.street} onChange={updateShip} placeholder="e.g. 123 Kimathi Street" required />
-                </div>
-                <div className="checkout__field">
-                  <label>City</label>
-                  <input name="city" value={ship.city} onChange={updateShip} placeholder="e.g. Nairobi" required />
-                </div>
-                <div className="checkout__field">
-                  <label>County</label>
-                  <input name="county" value={ship.county} onChange={updateShip} placeholder="e.g. Nairobi County" required />
-                </div>
-                <div className="checkout__field checkout__field--full">
-                  <label>Phone Number</label>
-                  <input name="phone" value={ship.phone} onChange={updateShip} placeholder="e.g. 0712 345 678" required />
-                </div>
-              </div>
-              <button
-                className="btn-primary checkout__next"
-                onClick={() => {
-                  if (!ship.fullName || !ship.street || !ship.city || !ship.county || !ship.phone) {
-                    setError("Please fill in all shipping fields."); return;
-                  }
-                  setError(""); setStep(1);
-                }}
-              >
-                Continue to Payment →
-              </button>
-            </div>
-          )}
-
-          {/* Step 1 — Payment */}
-          {step === 1 && (
-            <div className="checkout__section">
-              <h2>Payment Method</h2>
-
-              <div className="checkout__payment-methods">
-                {[
-                  { id: "mpesa",           label: "M-Pesa",           icon: "📱" },
-                  { id: "stripe",          label: "Credit / Debit Card", icon: "💳" },
-                  { id: "cash_on_delivery",label: "Cash on Delivery",  icon: "💵" },
-                ].map((m) => (
-                  <label
-                    key={m.id}
-                    className={`payment-method ${payMethod === m.id ? "active" : ""}`}
-                  >
-                    <input
-                      type="radio"
-                      name="payment"
-                      value={m.id}
-                      checked={payMethod === m.id}
-                      onChange={() => setPayMethod(m.id)}
-                    />
-                    <span className="payment-method__icon">{m.icon}</span>
-                    <span className="payment-method__label">{m.label}</span>
-                  </label>
-                ))}
-              </div>
-
-              {payMethod === "mpesa" && (
-                <div className="checkout__field checkout__field--full" style={{ marginTop: 24 }}>
-                  <label>M-Pesa Phone Number</label>
-                  <input
-                    value={mpesaPhone}
-                    onChange={(e) => setMpesaPhone(e.target.value)}
-                    placeholder="e.g. 0712 345 678"
-                  />
-                  <p className="checkout__hint">
-                    You will receive an STK push to complete payment
-                  </p>
+      <div className="order-page__layout">
+        <div>
+          {!order.isPaid && (
+            <div className="order-block">
+              <h2>Complete Your Payment</h2>
+              {order.paymentMethod === "mpesa" && (
+                <MpesaPayment orderId={order._id} totalPrice={order.totalPrice} onSuccess={fetchOrder} />
+              )}
+              {order.paymentMethod === "paystack" && (
+                <PaystackPayment orderId={order._id} totalPrice={order.totalPrice} onSuccess={fetchOrder} />
+              )}
+              {order.paymentMethod === "cash_on_delivery" && (
+                <div style={{ padding: "16px", background: "var(--cream)", border: "1px solid var(--border)", fontSize: 14, color: "var(--muted)" }}>
+                  Pay cash when your order is delivered.
                 </div>
               )}
+            </div>
+          )}
 
-              {payMethod === "stripe" && (
-                <div className="checkout__card-notice">
-                  <p>💳 Card payment will be set up in Step 7 (Payments integration).</p>
-                  <p>For now, select M-Pesa or Cash on Delivery to test the flow.</p>
+          <div className="order-block">
+            <h2>Items Ordered</h2>
+            {order.orderItems.map((item, i) => (
+              <div key={i} className="order-item">
+                <div className="order-item__img">
+                  {item.image ? <img src={item.image} alt={item.name} /> : <div className="order-item__no-img">No Img</div>}
                 </div>
-              )}
-
-              <div className="checkout__nav">
-                <button className="btn-outline" onClick={() => setStep(0)}>← Back</button>
-                <button className="btn-primary checkout__next" onClick={() => { setError(""); setStep(2); }}>
-                  Review Order →
-                </button>
+                <div className="order-item__info">
+                  <p className="order-item__name">{item.name}</p>
+                  {item.size  && <p className="order-item__meta">Size: {item.size}</p>}
+                  {item.color && <p className="order-item__meta">Color: {item.color}</p>}
+                  <p className="order-item__meta">Qty: {item.quantity}</p>
+                </div>
+                <p className="order-item__price">Ksh {(item.price * item.quantity).toLocaleString()}</p>
               </div>
-            </div>
-          )}
+            ))}
+          </div>
 
-          {/* Step 2 — Review */}
-          {step === 2 && (
-            <div className="checkout__section">
-              <h2>Review Your Order</h2>
+          <div className="order-block">
+            <h2>Shipping Address</h2>
+            <p>{order.shippingAddress.fullName}</p>
+            <p>{order.shippingAddress.street}</p>
+            <p>{order.shippingAddress.city}, {order.shippingAddress.county}</p>
+            <p>{order.shippingAddress.country}</p>
+            <p>{order.shippingAddress.phone}</p>
+          </div>
 
-              <div className="checkout__review-block">
-                <h3>Shipping To</h3>
-                <p>{ship.fullName}</p>
-                <p>{ship.street}, {ship.city}</p>
-                <p>{ship.county}, Kenya</p>
-                <p>{ship.phone}</p>
-                <button className="checkout__edit" onClick={() => setStep(0)}>Edit</button>
-              </div>
-
-              <div className="checkout__review-block">
-                <h3>Payment</h3>
-                <p>{payMethod === "mpesa" ? `M-Pesa — ${mpesaPhone}` : payMethod === "stripe" ? "Credit / Debit Card" : "Cash on Delivery"}</p>
-                <button className="checkout__edit" onClick={() => setStep(1)}>Edit</button>
-              </div>
-
-              <div className="checkout__review-items">
-                <h3>Items ({items.length})</h3>
-                {items.map((item) => (
-                  <div key={`${item._id}-${item.size}`} className="checkout__review-item">
-                    <div className="checkout__review-img">
-                      {item.image
-                        ? <img src={item.image} alt={item.name} />
-                        : <div className="cart-item__no-img">No Img</div>
-                      }
-                    </div>
-                    <div>
-                      <p className="checkout__review-name">{item.name}</p>
-                      {item.size  && <p className="checkout__review-meta">Size: {item.size}</p>}
-                      {item.color && <p className="checkout__review-meta">Color: {item.color}</p>}
-                      <p className="checkout__review-meta">Qty: {item.quantity}</p>
-                    </div>
-                    <p className="checkout__review-price">
-                      Ksh {(item.price * item.quantity).toLocaleString()}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              {error && <p className="error-msg">{error}</p>}
-
-              <div className="checkout__nav">
-                <button className="btn-outline" onClick={() => setStep(1)}>← Back</button>
-                <button
-                  className="btn-primary checkout__next"
-                  onClick={handlePlaceOrder}
-                  disabled={loading}
-                >
-                  {loading ? "Placing Order..." : "Place Order"}
-                </button>
-              </div>
-            </div>
-          )}
+          <div className="order-block">
+            <h2>Payment</h2>
+            <p>Method: <strong>{order.paymentMethod}</strong></p>
+            <p>Status: <strong style={{ color: order.isPaid ? "#10b981" : "#f59e0b" }}>
+              {order.isPaid ? "Paid" : "Pending Payment"}
+            </strong></p>
+          </div>
         </div>
 
-        {/* Right — order summary */}
-        <div className="checkout__summary">
-          <h2>Order Summary</h2>
-          {items.map((item) => (
-            <div key={`${item._id}-${item.size}`} className="checkout__summary-item">
-              <span className="checkout__summary-qty">{item.quantity}×</span>
-              <span className="checkout__summary-name">{item.name}</span>
-              <span>Ksh {(item.price * item.quantity).toLocaleString()}</span>
-            </div>
-          ))}
-          <div className="checkout__summary-divider" />
-          <div className="checkout__summary-row">
-            <span>Subtotal</span><span>Ksh {totalPrice.toLocaleString()}</span>
+        <div className="order-page__summary">
+          <div className="order-status" style={{ borderColor: statusColors[order.status] }}>
+            <span className="order-status__label">Order Status</span>
+            <span className="order-status__value" style={{ color: statusColors[order.status] }}>
+              {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+            </span>
           </div>
-          <div className="checkout__summary-row">
-            <span>Shipping</span><span>{shipping === 0 ? "FREE" : `Ksh ${shipping}`}</span>
+          <div className="order-block">
+            <h2>Price Summary</h2>
+            <div className="order-summary-row"><span>Items</span><span>Ksh {order.itemsPrice.toLocaleString()}</span></div>
+            <div className="order-summary-row"><span>Shipping</span><span>{order.shippingPrice === 0 ? "FREE" : `Ksh ${order.shippingPrice}`}</span></div>
+            <div className="order-summary-row"><span>VAT</span><span>Ksh {order.taxPrice.toLocaleString()}</span></div>
+            <div className="order-summary-total"><span>Total</span><span>Ksh {order.totalPrice.toLocaleString()}</span></div>
           </div>
-          <div className="checkout__summary-row">
-            <span>VAT (16%)</span><span>Ksh {tax.toLocaleString()}</span>
-          </div>
-          <div className="checkout__summary-total">
-            <span>Total</span><span>Ksh {grandTotal.toLocaleString()}</span>
-          </div>
+          <Link to="/products" className="btn-primary order-page__shop-btn">Continue Shopping</Link>
+          <Link to="/orders"   className="btn-outline order-page__orders-btn">View All Orders</Link>
         </div>
       </div>
     </div>

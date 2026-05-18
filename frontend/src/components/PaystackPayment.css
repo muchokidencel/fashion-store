@@ -1,0 +1,62 @@
+.paystack {
+  border: 1px solid var(--border);
+  padding: 28px;
+  background: var(--white);
+}
+
+.paystack__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+.paystack__logo {
+  width: 44px; height: 44px;
+  background: #0ba4db;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.paystack__header h3 { font-size: 16px; font-weight: 500; margin-bottom: 2px; }
+.paystack__header p  { font-size: 14px; color: var(--muted); }
+
+.paystack__info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+}
+.paystack__info p {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.paystack__btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  margin-bottom: 12px;
+  background: #0ba4db;
+  border-color: #0ba4db;
+}
+.paystack__btn:hover {
+  background: transparent;
+  color: #0ba4db;
+}
+
+.paystack__powered {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+}
+.paystack__powered strong { color: #0ba4db; }
